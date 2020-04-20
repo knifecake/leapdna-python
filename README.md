@@ -1,4 +1,4 @@
-# leapdna python
+# 👩‍🔬 leapdna python 🐍
 
 An implementation of the leapdna toolkit in python.
 
@@ -15,13 +15,23 @@ Example usage:
 ```python
 from leapdna import FrequencyStudy
 
-fs = FrequencyStudy.load_file('examples/sample.json')
+# load a leapdna file
+fs = FrequencyStudy.load_file('examples/sample1.json')
+
+# load a tabular file in CSV format
+fs = FrequencyStudy.load_tabular_file('examples/sample1.csv')
+
+# load a Familias file
+fs = FrequencyStudy.load_familias_file('examples/sample1.txt')
 
 # convert to allelic ladder format
 fs.to_table()
 
 # convert to allelic ladder format but with loci in the rows
 fs.to_table(rows = 'loci')
+
+# get the frequency of a particular allele at a locus
+fs.get_freq('Locus 1', 'Allele 1')
 ```
 
 ## Testing

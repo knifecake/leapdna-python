@@ -1,0 +1,13 @@
+Locus 1
+Allele 1	0.800
+Allele 2	0.200
+
+Locus 2
+Allele 2	0.500
+Allele 3	0.480
+Allele 4	0.02
+
+Locus 3
+Allele A	0.4
+Allele B	0.590
+

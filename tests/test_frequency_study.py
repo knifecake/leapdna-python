@@ -4,7 +4,7 @@ from leapdna import FrequencyStudy
 
 class TestFrequencyStudy(unittest.TestCase):
     def setUp(self):
-        self.fs = FrequencyStudy.from_file('examples/sample.json')
+        self.fs = FrequencyStudy.from_file('examples/sample1.json')
 
     def test_all_allele_names(self):
         expected = {'Allele 2', 'Allele B', 'Allele A', 'Allele 3', 'Allele 1', 'Allele 4'}
