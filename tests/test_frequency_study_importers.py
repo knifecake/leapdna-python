@@ -28,9 +28,11 @@ expected_metadata = {
 class TestFrequencyStudyImporters(unittest.TestCase):
     def test_load_tabular_file(self):
         fs = load_tabular_file('tests/stubs/sample1.csv',)
-        table = fs.to_table()
+        self.assertEqual(fs.to_table(), expected_loci)
 
-        self.assertEqual(fs.to_table(), table)
+    def test_load_tabular_file_with_custom_na_value(self):
+        fs = load_tabular_file('tests/stubs/sample1-na.csv', na_string = 'NA')
+        self.assertEqual(fs.to_table(), expected_loci)
 
     def test_leapdna_import(self):
         with open('tests/stubs/sample1.json') as f:

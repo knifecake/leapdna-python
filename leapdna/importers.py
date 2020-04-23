@@ -2,6 +2,7 @@ import csv
 import json
 from io import StringIO
 
+from .utils import replace
 from .frequency_study import FrequencyStudy
 
 __all__ = [
@@ -31,7 +32,7 @@ def import_familias(contents):
         
     return FrequencyStudy(loci)
 
-def import_tabular(contents, dialect = 'guess', rows = 'guess', na_value = ''):
+def import_tabular(contents, dialect = 'guess', rows = 'guess', na_string = ''):
     if rows not in ('alleles', 'loci', 'guess'):
         raise ValueError('Invalid \'rows\' parameter. Must be one of "alleles", "loci" or "guess".')
 
@@ -40,6 +41,9 @@ def import_tabular(contents, dialect = 'guess', rows = 'guess', na_value = ''):
 
     reader = csv.reader(StringIO(contents), dialect)
     table = list(reader)
+
+    if na_string != '':
+        table = replace(table, na_string, 0)
 
     if rows == 'loci':
         table = transpose(table)
@@ -87,7 +91,10 @@ def load_file(path, mode = 'auto', metadata = {}, **kwargs):
 def guess_filetype(path, contents):
     if '.json' in path:
         guess = 'json'
-    elif 'csv' in path or 'tsv' in path:
+    elif '.csv' in path or '.tsv' in path:
         guess = 'tabular'
+    elif '.txt' in path:
+        # TODO: be more sophisticated
+        guess = 'familias'
 
     return guess

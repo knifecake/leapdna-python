@@ -9,10 +9,15 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(transpose([[1,2], [3,4], [5,6]]), [[1,3,5], [2,4,6]])
         self.assertEqual(transpose([[1,3,5], [2,4,6]]), [[1,2], [3,4], [5,6]])
 
+    def test_replace(self):
+        self.assertEqual(replace([[1]], None, 2), [[1]])
+        self.assertEqual(replace([[1]], 1, 2), [[2]])
+        self.assertEqual(replace([[1,2],[3,1]], 1, 'NA'), [['NA',2], [3,'NA']])
+
     def test_union(self):
         self.assertEqual(union([]), set([]))
-        self.assertEqual(union([1], []), set([1]))
-        self.assertEqual(union([], [1]), set([1]))
-        self.assertEqual(union([1,2], [2,3]), set([1,2,3]))
-        self.assertEqual(union([1,2], [3,4]), set([1,2,3,4]))
-        self.assertEqual(union([1,2], [1,2]), set([1,2]))
+        self.assertEqual(union([1], []), {1})
+        self.assertEqual(union([], [1]), {1})
+        self.assertEqual(union([1,2], [2,3]), {1,2,3})
+        self.assertEqual(union([1,2], [3,4]), {1,2,3,4})
+        self.assertEqual(union([1,2], [1,2]), {1,2})

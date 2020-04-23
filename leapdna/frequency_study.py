@@ -1,10 +1,10 @@
-import json
-import csv
-
 from .utils import transpose, union
 
 class FrequencyStudy():
-    def __init__(self, loci = [], metadata = {}): 
+    def __init__(self, loci = None, metadata = None):
+        if loci is None: loci = []
+        if metadata is None: metadata = {}
+
         self.loci = FrequencyStudy._locus_tree(loci)
         self.metadata = metadata
 
