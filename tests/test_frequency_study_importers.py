@@ -2,6 +2,7 @@ import unittest
 import json
 
 from leapdna import FrequencyStudy
+from leapdna.importers import *
 
 expected_loci = [
     ['', 'Locus 1', 'Locus 2', 'Locus 3'],
@@ -25,24 +26,20 @@ expected_metadata = {
 }
 
 class TestFrequencyStudyImporters(unittest.TestCase):
-    def test_table_import(self):
-        fs = FrequencyStudy.from_file('examples/sample1.json')
+    def test_load_tabular_file(self):
+        fs = load_tabular_file('tests/stubs/sample1.csv',)
         table = fs.to_table()
 
-        self.assertEqual(FrequencyStudy.from_table(table).to_table(), table)
+        self.assertEqual(fs.to_table(), table)
 
     def test_leapdna_import(self):
-        with open('examples/sample1.json') as f:
+        with open('tests/stubs/sample1.json') as f:
             data = json.loads(f.read())
             fs = FrequencyStudy.from_leapdna(data)
 
             self.assertEqual(fs.to_table(), expected_loci)
             self.assertEqual(fs.metadata, expected_metadata)
 
-    def test_tabular_file_import(self):
-        fs = FrequencyStudy.from_tabular_file('examples/sample1.csv')
-        self.assertEqual(fs.to_table(), expected_loci)
-
-    def test_familias_file_import(self):
-        fs = FrequencyStudy.from_familias_file('examples/sample1.txt')
+    def test_load_familias_file(self):
+        fs = load_familias_file('tests/stubs/sample1.txt')
         self.assertEqual(fs.to_table(), expected_loci)
