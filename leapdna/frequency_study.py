@@ -1,12 +1,22 @@
 from .utils import transpose, union
 
+from .locus import Locus
+
 class FrequencyStudy():
-    def __init__(self, loci = None, metadata = None):
+    def __init__(self, loci = None, metadata = None, **user):
         if loci is None: loci = []
         if metadata is None: metadata = {}
 
-        self.loci = FrequencyStudy._locus_tree(loci)
+        for i, locus in enumerate(loci):
+            if not isinstance(locus, Locus):
+                loci[i] = Locus(**locus)
+
+        self.loci = { locus['name']: locus for locus in loci }
         self.metadata = metadata
+        if len(user) > 0:
+            self.user = user
+        else:
+            self.user = None
 
     def get_freq(self, locus, allele):
         try:
@@ -52,22 +62,12 @@ class FrequencyStudy():
                         'name': allele_index[i + 1],
                         'frequency': float(frequency)
                     })
-            loci.append(locus)
-
-        self.loci = self._locus_tree(loci)
+                    
+            self.loci[locus['name']] = Locus(**locus)
 
     @classmethod
     def from_leapdna(cls, json):
         return FrequencyStudy(json.get('loci', []), json.get('metadata', {}))
-
-    @staticmethod
-    def _locus_tree(loci):
-        for locus in loci:
-            named_alleles = { 'alleles': { allele['name']: allele
-                for allele in locus['alleles'] }}
-            locus.update(named_alleles)
-
-        return { locus['name']: locus for locus in loci }
 
     def __repr__(self):
         return '%s with %d loci' % (self.__class__, len(self.loci))

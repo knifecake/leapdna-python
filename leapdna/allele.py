@@ -30,6 +30,13 @@ class Allele:
     def to_leapdna(self):
         return drop_nones(self.__dict__)
 
+    # pretend to be a dictionary
+    def __getitem__(self, index):
+        return self.__dict__[index]
+
+    def __setitem__(self, index, value):
+        self.__dict__[index] = value
+
 def repeat_to_seq(bracketed):
     seq = ''
     in_braket = False
