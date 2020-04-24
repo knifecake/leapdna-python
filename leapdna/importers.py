@@ -98,3 +98,21 @@ def guess_filetype(path, contents):
         guess = 'familias'
 
     return guess
+
+def load_mps_study(path, columns, dialect = 'guess'):
+    columns = { key: i for i, key in enumerate(columns) }
+
+    with open(path, newline = '') as f:
+        if dialect == 'guess':
+            dialect = csv.Sniffer().sniff(f.read(1000))
+            f.seek(0)
+
+        reader = csv.reader(f, delimiter = ';')
+
+        alleles = []
+        # each line is one or more observations of an allele
+        for entry in reader:
+            allele = { key: entry[columns[key]] for key in columns}
+            alleles.append(allele)
+        
+        return alleles

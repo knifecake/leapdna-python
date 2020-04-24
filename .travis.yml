@@ -1,6 +1,8 @@
 language: python
 python:
   - "3.6"
-
+install:
+  - pip install codecov coverage
 script:
-  python3 -m unittest discover
+  - coverage run --source leapdna -m unittest discover 
+  - codecov

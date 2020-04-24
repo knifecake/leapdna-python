@@ -1,7 +1,12 @@
 import operator
 from functools import reduce
 
-__all__ = ['transpose', 'union', 'replace']
+__all__ = [
+    'transpose',
+    'union',
+    'replace',
+    'drop_nones'
+]
 
 def transpose(matrix):
     return list(map(list, zip(*matrix)))
@@ -11,3 +16,6 @@ def replace(matrix, src, dst):
 
 def union(*lists):
     return set(reduce(operator.add, lists))
+
+def drop_nones(dict):
+    return { k: v for k, v in dict.items() if v is not None }

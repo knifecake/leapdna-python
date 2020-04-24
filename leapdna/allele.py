@@ -1,3 +1,35 @@
+from .utils import drop_nones
+
+class Allele:
+    def __init__(self,
+        name,
+        frequency = None,
+        count = None,
+        repeat_units = None,
+        flank_features = None,
+        assempbly = None,
+        flank5 = None,
+        repeating_region = None,
+        flank3 = None,
+        **user):
+
+        self.name = name
+        self.frequency = frequency
+        self.count = count
+        self.repeat_units = repeat_units
+        self.flank_features = flank_features
+        self.assempbly = assempbly
+        self.flank5 = flank5
+        self.repeating_region = repeating_region
+        self.flank3 = flank3
+        if len(user) > 0:
+            self.user = user
+        else:
+            self.user = None
+
+    def to_leapdna(self):
+        return drop_nones(self.__dict__)
+
 def repeat_to_seq(bracketed):
     seq = ''
     in_braket = False

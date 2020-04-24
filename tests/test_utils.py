@@ -21,3 +21,8 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(union([1,2], [2,3]), {1,2,3})
         self.assertEqual(union([1,2], [3,4]), {1,2,3,4})
         self.assertEqual(union([1,2], [1,2]), {1,2})
+
+    def test_drop_nones(self):
+        self.assertEqual(drop_nones({}), {})
+        self.assertEqual(drop_nones({'a': 1, 'b': 2}), {'a': 1, 'b': 2})
+        self.assertEqual(drop_nones({'a': 1, 'b': None}), {'a': 1})
