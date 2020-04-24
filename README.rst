@@ -1,0 +1,69 @@
+#######################
+👩‍🔬 leapdna python 🐍
+#######################
+
+.. image:: https://travis-ci.org/knifecake/leapdna-python.svg?branch=master
+    :target: https://travis-ci.org/knifecake/leapdna-python
+
+An implementation of the leapdna toolkit in Python.
+
+Installation
+============
+
+TODO
+
+Modules
+=======
+
+Frequency studies
+-------------------------
+
+Example usage::
+
+    from leapdna import FrequencyStudy
+    from leapdna.importers import *
+    from leapdna.utils import *
+
+    # load a leapdna file
+    fs = load_file('tests/stubs/sample1.json')
+
+    # load a tabular file in CSV format
+    fs = load_tabular_file('tests/stubs/sample1.csv')
+
+    # load a Familias file
+    fs = load_familias_file('tests/stubs/sample1.txt')
+
+    # convert to allelic ladder format
+    fs.to_table()
+
+    # convert to allelic ladder format but with loci in the rows
+    transpose(fs.to_table())
+
+    # get the frequency of a particular allele at a locus
+    fs.get_freq('Locus 1', 'Allele 1')
+
+
+Testing
+-------
+
+You can run the tests from the project root by executing:::
+
+    python -m unittest discover
+
+If one or more tests fail, it can be handy to stop after the first failure.
+This can be done by adding the `-f` option to the above command. Also, for
+debugging purposes it can be helpful to include the ``--locals`` flag, which
+will print local variables at every stack frame for the failed test(s).
+
+
+License
+=======
+
+&copy; 2020 Elias Hernandis
+
+Leapdna is free and open-source sofware released under the `MIT
+License <https://choosealicense.com/licenses/mit/>`_. Everyone is free to copy,
+modify and redistribute the sofware, even for commercial purposes. While no
+attribution is required, it is very much appreciated. The full text of the
+license is available
+`here <https://github.com/knifecake/leapdna-python/blob/master/LICENSE>`_.
