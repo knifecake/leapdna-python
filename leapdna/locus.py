@@ -4,10 +4,21 @@ from .allele import Allele
 from .utils import drop_nones
 
 class Locus():
-    def __init__(self, name, alleles = None, **user):
+    def __init__(self,
+        name,
+        alleles = None,
+        chrom = None,
+        refseq_start = None,
+        refseq_end = None,
+        refseq_name = None,
+        **user):
         if alleles is None: alleles = []
 
         self.name = name
+        self.chrom = chrom
+        self.refseq_name = refseq_name
+        self.refseq_start = refseq_start
+        self.refseq_end = refseq_end
         for i, allele in enumerate(alleles):
             if not isinstance(allele, Allele):
                 alleles[i] = Allele(**allele)
@@ -20,8 +31,11 @@ class Locus():
         return ret
 
     def calculate_sample_size(self):
-        self.sample_size = sum(map(lambda a: a.count, self.alleles.values()))
-        return self.sample_size
+        try:
+            self.sample_size = sum(map(lambda a: a.count, self.alleles.values()))
+            return self.sample_size
+        except TypeError:
+            raise ValueError(f'some alleles have missing sample counts for locus {self.name}')
 
     def calculate_frequencies(self):
         total = self.calculate_sample_size()

@@ -6,22 +6,24 @@ class Allele:
         frequency = None,
         count = None,
         repeat_units = None,
+        repeating_region_bracketed = None,
         flank_features = None,
-        assempbly = None,
-        flank5 = None,
-        repeating_region = None,
-        flank3 = None,
+        assembly = None,
+        flank5_seq = None,
+        repeating_region_seq = None,
+        flank3_seq = None,
         **user):
 
         self.name = name
         self.frequency = frequency
         self.count = count
         self.repeat_units = repeat_units
+        self.repeating_region_bracketed = repeating_region_bracketed
         self.flank_features = flank_features
-        self.assempbly = assempbly
-        self.flank5 = flank5
-        self.repeating_region = repeating_region
-        self.flank3 = flank3
+        self.assembly = assembly
+        self.flank5_seq = flank5_seq
+        self.repeating_region_seq = repeating_region_seq
+        self.flank3_seq = flank3_seq
         if len(user) > 0:
             self.user = user
         else:

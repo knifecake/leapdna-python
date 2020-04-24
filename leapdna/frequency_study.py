@@ -1,4 +1,4 @@
-from .utils import transpose, union
+from .utils import transpose, union, drop_nones
 
 from .locus import Locus
 
@@ -73,6 +73,11 @@ class FrequencyStudy():
                     })
                     
             self.loci[locus['name']] = Locus(**locus)
+
+    def to_leapdna(self):
+        ret = drop_nones(self.__dict__)
+        ret['loci'] = list(map(lambda l: l.to_leapdna(), self.loci.values()))
+        return ret
 
     @classmethod
     def from_leapdna(cls, json):
