@@ -6,5 +6,5 @@ build
 *.egg-info
 .vscode
 data
-test.py
+experiments.py
 .coverage

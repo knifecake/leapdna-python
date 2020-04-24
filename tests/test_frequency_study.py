@@ -41,3 +41,16 @@ class TestFrequencyStudy(unittest.TestCase):
         fs = FrequencyStudy()
         fs.from_table(expected)
         self.assertEqual(fs.to_table(), expected)
+
+    def test_calculate_sample_sizes(self):
+        fs = FrequencyStudy([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}]}])
+        fs.calculate_sample_sizes()
+
+        self.assertEqual(fs.loci['L1'].sample_size, 5)
+
+    def test_calculate_frequencies(self):
+        fs = FrequencyStudy([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}, {'name': 'B', 'count': 5}]}])
+        fs.calculate_frequencies()
+
+        self.assertEqual(fs.loci['L1'].alleles['A'].frequency, 0.5)
+        self.assertEqual(fs.loci['L1'].alleles['B'].frequency, 0.5)

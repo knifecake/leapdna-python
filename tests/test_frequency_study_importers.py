@@ -45,3 +45,12 @@ class TestFrequencyStudyImporters(unittest.TestCase):
     def test_load_familias_file(self):
         fs = load_familias_file('tests/stubs/sample1.txt')
         self.assertEqual(fs.to_table(), expected_loci)
+
+    def test_filetype_guess(self):
+        csv_path = 'tests/stubs/sample1.csv'
+        with open(csv_path) as csv_file:
+            self.assertEqual(guess_filetype(csv_path, csv_file), 'tabular')
+
+        familias_path = 'tests/stubs/sample1.txt'
+        with open(familias_path) as familias_file:
+            self.assertEqual(guess_filetype(familias_path, familias_file), 'familias')

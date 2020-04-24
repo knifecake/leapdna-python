@@ -30,6 +30,15 @@ class FrequencyStudy():
     def all_allele_names(self):
         return union(*(list(locus['alleles'].keys()) for locus in self.loci.values()))
 
+    def calculate_sample_sizes(self):
+        for name in self.loci:
+            self.loci[name].calculate_sample_size()
+
+    def calculate_frequencies(self):
+        self.calculate_sample_sizes()
+        for name in self.loci:
+            self.loci[name].calculate_frequencies()
+
     def to_table(self):
         table = []
         row_headers = sorted(self.all_allele_names())

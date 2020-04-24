@@ -19,6 +19,15 @@ class Locus():
         ret['alleles'] = list(map(lambda a: a.to_leapdna(), self.alleles.values()))
         return ret
 
+    def calculate_sample_size(self):
+        self.sample_size = sum(map(lambda a: a.count, self.alleles.values()))
+        return self.sample_size
+
+    def calculate_frequencies(self):
+        total = self.calculate_sample_size()
+        for name in self.alleles:
+            self.alleles[name].frequency = self.alleles[name].count / total
+
     # pretend to be a dictionary
     def __getitem__(self, index):
         return self.__dict__[index]
