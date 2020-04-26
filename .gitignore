@@ -5,6 +5,4 @@ dist
 build
 *.egg-info
 .vscode
-data
-experiments.py
 .coverage

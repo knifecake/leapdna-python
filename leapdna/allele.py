@@ -6,7 +6,9 @@ class Allele:
         frequency = None,
         count = None,
         repeat_units = None,
+        flank5_bracketed = None,
         repeating_region_bracketed = None,
+        flank3_bracketed = None,
         flank_features = None,
         assembly = None,
         flank5_seq = None,
@@ -18,7 +20,9 @@ class Allele:
         self.frequency = frequency
         self.count = count
         self.repeat_units = repeat_units
+        self.flank5_bracketed = flank5_bracketed
         self.repeating_region_bracketed = repeating_region_bracketed
+        self.flank3_bracketed = flank3_bracketed
         self.flank_features = flank_features
         self.assembly = assembly
         self.flank5_seq = flank5_seq
