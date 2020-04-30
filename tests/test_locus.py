@@ -21,12 +21,37 @@ class TestLocus(unittest.TestCase):
         self.assertEqual(ldna['name'], 'other')
         self.assertEqual(l.name, 'lname')
 
+    def test_hobs(self):
+        locus = Locus('name', h_obs = 0.4, alleles = [Allele('a', frequency = 0.5), Allele('b', frequency = 0.5)])
+        self.assertEqual(locus.h_obs, 0.4)
+        locus.h_obs = 0.6
+        self.assertEqual(locus.h_obs, 0.6)
+
+    def test_set_hobs(self):
+        with self.assertRaises(AssertionError):
+            l = Locus('name')
+            l.h_obs = 1.2
+
+        with self.assertRaises(AssertionError):
+            l = Locus('name', h_obs = 1.2)
+
     def test_hexp(self):
         locus = Locus('name', alleles = [Allele('a', frequency = 0.5), Allele('b', frequency = 0.5)])
         self.assertEqual(locus.h_exp, 0.5)
+
+    def test_set_hexp(self):
+        locus = Locus('name', alleles = [Allele('a', frequency = 0.5), Allele('b', frequency = 0.5)])
+        with self.assertRaises(AssertionError):
+            locus.h_exp = 12
 
     def test_sample_size(self):
         locus = Locus('name', alleles = [Allele('a', count = 10), Allele('b', count = 20)])
         self.assertEqual(locus.sample_size, 30)
         locus.sample_size = 123
         self.assertEqual(locus.sample_size, 123)
+
+    def test_sample_size_fails(self):
+        locus = Locus('name', alleles = [Allele('a', count = 10), Allele('b')])
+        with self.assertRaises(ValueError):
+            locus.sample_size
+

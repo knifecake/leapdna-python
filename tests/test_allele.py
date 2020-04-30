@@ -1,6 +1,7 @@
 import unittest
 
 from leapdna.allele import Allele
+from leapdna.sequence import Sequence
 
 class TestAllele(unittest.TestCase):
     def test_allele_supports_ce(self):
@@ -15,6 +16,11 @@ class TestAllele(unittest.TestCase):
 
         a.name = 'right'
         self.assertEqual(a.name, 'right')
+
+    def test_sequence_name_bubbles_up(self):
+        sq = Sequence(name = 'seqname')
+        a = Allele(sequence = sq)
+        self.assertEqual(a.name, sq.name)
 
     def test_leapdna_supports_ce(self):
         cea = Allele(ce_name = '13.2', frequency = 0.2, locus_name = 'vWA')

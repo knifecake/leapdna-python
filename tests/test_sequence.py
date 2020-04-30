@@ -4,6 +4,10 @@ import csv
 from leapdna.sequence import Sequence
 
 class TestSequence(unittest.TestCase):
+    def test_cannot_create_sequence_with_wrong_type(self):
+        with self.assertRaises(AssertionError):
+            Sequence(**{'type': 'allele'})
+
     def test_empty_to_leapdna(self):
         sq = Sequence()
         self.assertEqual(sq.to_leapdna()['type'], 'sequence')

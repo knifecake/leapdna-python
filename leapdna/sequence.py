@@ -1,6 +1,8 @@
 from .block import LeapdnaBlock
 
 class Sequence(LeapdnaBlock):
+    __block_type__ = 'sequence'
+
     def __init__(self,
                  name = None,
                  refseq_name = None,
@@ -15,7 +17,6 @@ class Sequence(LeapdnaBlock):
                  flank3_bracketed = None,
                  **rest):
 
-        rest['type'] = 'sequence'
         super().__init__(**rest)
 
         self._name = name
@@ -95,7 +96,6 @@ class Sequence(LeapdnaBlock):
     def flank3_bracketed(self, value):
         self.dprops['flank3_bracketed'] = value
         
-    
     def _seq_or_bracketed(self, index):
         '''Returns a sequence from the derived property dictionary. If the
         sequence is not found it attempts to calculate it from its bracketed

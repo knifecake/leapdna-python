@@ -11,28 +11,28 @@ class Locus():
         h_obs = None,
         h_exp = None,
         chrom = None,
+        refseq_name = None,
         refseq_start = None,
         refseq_end = None,
-        refseq_name = None,
         **user):
+
         if alleles is None: alleles = []
+        self.dprops = {}
 
         self.name = name
-        self.chrom = chrom
-        self.refseq_name = refseq_name
-        self.refseq_start = refseq_start
-        self.refseq_end = refseq_end
-        self.dprops = {
-            'h_obs': h_obs,
-            'h_exp': h_exp,
-            'sample_size': sample_size
-        }
-
         for i, allele in enumerate(alleles):
             if not isinstance(allele, Allele):
                 alleles[i] = Allele(**allele)
 
         self.alleles = { allele.name: allele for allele in alleles }
+        self.sample_size = sample_size
+        self.h_obs = h_obs
+        self.h_exp = h_exp
+        self.chrom = chrom
+        self.refseq_name = refseq_name
+        self.refseq_start = refseq_start
+        self.refseq_end = refseq_end
+
 
     @property
     def h_obs(self):
@@ -40,7 +40,7 @@ class Locus():
 
     @h_obs.setter
     def h_obs(self, value):
-        assert 0 <= value and value <= 1
+        assert value is None or 0 <= value and value <= 1, "h_obs is not between 0 and 1"
         self.dprops['h_obs'] = value
     
     @property
@@ -52,7 +52,7 @@ class Locus():
 
     @h_exp.setter
     def h_exp(self, value):
-        assert 0 <= value and value <= 1
+        assert value is None or 0 <= value and value <= 1, "h_exp is not between 0 and 1"
         self.dprops['h_exp'] = value
 
     def to_leapdna(self):
@@ -74,7 +74,7 @@ class Locus():
     
     @sample_size.setter
     def sample_size(self, value):
-        assert isinstance(value, int) and value >= 0
+        assert value is None or isinstance(value, int) and value >= 0, "sample size is not a non-negative integer"
         self.dprops['sample_size'] = value
     
     def calculate_frequencies(self):

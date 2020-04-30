@@ -48,3 +48,19 @@ class TestFrequencyStudy(unittest.TestCase):
 
         self.assertEqual(fs.loci['L1'].alleles['A'].frequency, 0.5)
         self.assertEqual(fs.loci['L1'].alleles['B'].frequency, 0.5)
+
+    def test_leapdna(self):
+        fs = FrequencyStudy([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}]}])
+        expected = {
+            'type': 'frequency_study',
+            'loci': [
+                {
+                    'type': 'locus', 
+                    'name': 'L1',
+                    'alleles': [
+                        { 'type': 'allele', 'name': 'A', 'count': 5 }
+                    ]
+                }
+            ]
+        }
+

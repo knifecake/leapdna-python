@@ -1,6 +1,8 @@
 from .block import LeapdnaBlock
 
 class Allele(LeapdnaBlock):
+    __block_type__ = 'allele'
+
     def __init__(self,
         name = None,
         ce_name = None,
@@ -11,7 +13,6 @@ class Allele(LeapdnaBlock):
         **rest):
 
         super().__init__(**rest)
-        self.type = 'allele'
 
         self._name = name
         self.ce_name = ce_name
