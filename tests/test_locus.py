@@ -7,7 +7,7 @@ class TestLocus(unittest.TestCase):
     def test_to_leapdna(self):
         self.assertEqual(Locus('name').to_leapdna(), {'name': 'name', 'alleles': []})
         self.assertEqual(Locus('name', [{'name':'a'}, {'name':'b'}]).to_leapdna(),
-            {'name': 'name', 'alleles': [{'name':'a'}, {'name':'b'}]})
+                         {'name': 'name', 'alleles': [{'name':'a', 'type': 'allele'}, {'name':'b', 'type': 'allele' }]})
 
     def test_to_leapdna_moves_dprops_to_top_level(self):
         self.assertEqual(Locus('name', sample_size = 23).to_leapdna(), 

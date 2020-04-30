@@ -1,80 +1,45 @@
-from .utils import drop_nones
+from .block import LeapdnaBlock
 
-class Allele:
+class Allele(LeapdnaBlock):
     def __init__(self,
-        name,
+        name = None,
+        ce_name = None,
+        locus_name = None,
+        sequence = None,
         frequency = None,
         count = None,
-        repeat_units = None,
-        flank5_bracketed = None,
-        repeating_region_bracketed = None,
-        flank3_bracketed = None,
-        flank_features = None,
-        assembly = None,
-        flank5_seq = None,
-        repeating_region_seq = None,
-        flank3_seq = None,
-        **user):
+        **rest):
 
-        self.name = name
+        super().__init__(**rest)
+        self.type = 'allele'
+
+        self._name = name
+        self.ce_name = ce_name
+        self.locus_name = locus_name
+        self.sequence = sequence
         self.frequency = frequency
         self.count = count
-        self.repeat_units = repeat_units
-        self.flank5_bracketed = flank5_bracketed
-        self.repeating_region_bracketed = repeating_region_bracketed
-        self.flank3_bracketed = flank3_bracketed
-        self.flank_features = flank_features
-        self.assembly = assembly
-        self.flank5_seq = flank5_seq
-        self.repeating_region_seq = repeating_region_seq
-        self.flank3_seq = flank3_seq
-        if len(user) > 0:
-            self.user = user
-        else:
-            self.user = None
 
-    def to_leapdna(self):
-        return drop_nones(self.__dict__)
+    @property
+    def name(self):
+        if self._name is not None:
+            return self._name
 
-    # pretend to be a dictionary
-    def __getitem__(self, index):
-        return self.__dict__[index]
-
-    def __setitem__(self, index, value):
-        self.__dict__[index] = value
-
-def repeat_to_seq(bracketed):
-    seq = ''
-    in_braket = False
-    in_nrepeat = False
-    repeat = ''
-    nrepeat = 0
-    for char in bracketed:
-        if char.isspace(): continue
+        if self.sequence is not None:
+            self._name = self.sequence.name
+        elif self.ce_name is not None:
+            self._name = self.ce_name
         
-        if in_nrepeat:
-            if char.isdigit():
-                nrepeat = 10 * nrepeat + int(char)
-            else:
-                seq += repeat * nrepeat
-                in_nrepeat = False
-                repeat = ''
-    
-        if char in ('[', '('):
-            in_braket = True
-            repeat = ''
-            continue
-        elif char in (']', ')'):
-            in_braket = False
-            in_nrepeat = True
-            nrepeat = 0
-            continue
+        return self._name
 
-        if in_braket:
-            repeat += char
-        elif not in_nrepeat:
-            seq += char
+    @name.setter
+    def name(self, value):
+        self._name = value
 
-    # return accumulated sequence plus a possible last repeat
-    return seq + repeat * nrepeat
-            
+    def to_leapdna(self, top_level = False):
+        ret = super().to_leapdna(top_level)
+        if self._name is not None:
+            ret['name'] = self._name
+
+        return ret
+

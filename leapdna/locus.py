@@ -80,10 +80,3 @@ class Locus():
     def calculate_frequencies(self):
         for name in self.alleles:
             self.alleles[name].frequency = self.alleles[name].count / self.sample_size
-
-    # pretend to be a dictionary
-    def __getitem__(self, index):
-        return self.__dict__[index]
-
-    def __setitem__(self, index, value):
-        self.__dict__[index] = value

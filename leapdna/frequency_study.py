@@ -11,7 +11,7 @@ class FrequencyStudy():
             if not isinstance(locus, Locus):
                 loci[i] = Locus(**locus)
 
-        self.loci = { locus['name']: locus for locus in loci }
+        self.loci = { locus.name: locus for locus in loci }
         self.metadata = metadata
         if len(user) > 0:
             self.user = user
@@ -20,7 +20,7 @@ class FrequencyStudy():
 
     def get_freq(self, locus, allele):
         try:
-            return self.loci[locus]['alleles'][allele]['frequency']
+            return self.loci[locus].alleles[allele].frequency
         except KeyError:
             return 0
 
@@ -28,7 +28,7 @@ class FrequencyStudy():
         return set(self.loci.keys())
 
     def all_allele_names(self):
-        return union(*(list(locus['alleles'].keys()) for locus in self.loci.values()))
+        return union(*[[allele.name for allele in locus.alleles.values()] for locus in self.loci.values()])
 
     def calculate_frequencies(self):
         for name in self.loci:
