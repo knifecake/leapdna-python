@@ -5,9 +5,7 @@ class Allele(LeapdnaBlock):
 
     def __init__(self,
         name = None,
-        ce_name = None,
         locus_name = None,
-        sequence = None,
         frequency = None,
         count = None,
         **rest):
@@ -15,9 +13,7 @@ class Allele(LeapdnaBlock):
         super().__init__(**rest)
 
         self._name = name
-        self.ce_name = ce_name
         self.locus_name = locus_name
-        self.sequence = sequence
         self.frequency = frequency
         self.count = count
 
@@ -26,11 +22,6 @@ class Allele(LeapdnaBlock):
         if self._name is not None:
             return self._name
 
-        if self.sequence is not None:
-            self._name = self.sequence.name
-        elif self.ce_name is not None:
-            self._name = self.ce_name
-        
         return self._name
 
     @name.setter
@@ -44,3 +35,15 @@ class Allele(LeapdnaBlock):
 
         return ret
 
+class SequenceAllele(Allele):
+    __block_type__ = 'seq_allele'
+
+    def __init__(self, sequence, **rest):
+        rest['name'] = rest.get('name', sequence.name)
+        super().__init__(**rest)
+        self.sequence = sequence
+
+    def to_leapdna(self, top_level = False):
+        ret = super().to_leapdna(top_level)
+        ret['sequence'] = self.sequence.to_leapdna(False)
+        return ret

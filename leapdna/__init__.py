@@ -1,4 +1,4 @@
-from .frequency_study import FrequencyStudy
+from .study import Study
 
-__all__ = ['FrequencyStudy']
+__all__ = ['Study']
 

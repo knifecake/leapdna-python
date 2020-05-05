@@ -1,19 +1,15 @@
 class LeapdnaBlock():
-
-    __block_type__ = None
-    __leapdna_version__ = 1
-
-    def __init__(self, version = None, type = None, id = None, leapdna = None, **user):
-        self.dprops = None
+    __block_type__ = 'block'
+    def __init__(self, id = None, version = None, type = None, leapdna = None, **user):
+        self.dprops = {}
         if type is not None:
-            if self.__block_type__ is not None:
-                assert type == self.__block_type__, f"type does not match {self.__block_type__}"
+            assert type == self.__block_type__, f"Leapdna block is not a {self.__block_type__}"
             self.type = type
         else:
             self.type = self.__block_type__
 
-        self.version = version
         self.id = id
+        self.version = version
         self.leapdna = leapdna
         if len(user) > 0:
             self.user = user
@@ -22,10 +18,12 @@ class LeapdnaBlock():
 
     def to_leapdna(self, top_level = False):
         ret = self.drop_nones(self.__dict__)
+        del ret['dprops']
+
         if top_level:
-            ret['version'] = self.__leapdna_version__
-        if self.dprops is not None:
-            ret.update(self.drop_nones(self.dprops))
+            if self.version is not None: ret['version'] = self.version
+
+        ret.update(self.drop_nones(self.dprops))
 
         return ret
 

@@ -10,8 +10,10 @@ class TestSequence(unittest.TestCase):
 
     def test_empty_to_leapdna(self):
         sq = Sequence()
-        self.assertEqual(sq.to_leapdna()['type'], 'sequence')
-        self.assertEqual(sq.to_leapdna(top_level = True)['version'], 1)
+        expected = {
+            'type': 'sequence',
+        }
+        self.assertEqual(sq.to_leapdna(), expected)
 
     def test_to_leapdna(self):
         sq = Sequence(flank5_bracketed = '[ATTC]2')

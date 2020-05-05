@@ -9,14 +9,10 @@ class TestLeapdnaBlock(unittest.TestCase):
         self.assertEqual(b.to_leapdna()['id'], 'myid')
 
     def test_to_leapdna_top_level(self):
-        b = LeapdnaBlock()
+        b = LeapdnaBlock(version = 1)
         self.assertEqual(b.to_leapdna(top_level = True)['version'], 1)
 
     def test_user_params_are_serialized(self):
         b = LeapdnaBlock(custom = 'value')
         self.assertEqual(b.to_leapdna()['user']['custom'], 'value')
-
-    def test_custom_types_are_supported(self):
-        b = LeapdnaBlock(type = 'custom')
-        self.assertEqual(b.to_leapdna()['type'], 'custom')
 

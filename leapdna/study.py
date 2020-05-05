@@ -1,9 +1,12 @@
 from .utils import transpose, union, drop_nones
 
+from .block import LeapdnaBlock
 from .locus import Locus
 
-class FrequencyStudy():
-    def __init__(self, loci = None, metadata = None, **user):
+class Study(LeapdnaBlock):
+    __block_type__ = 'study'
+    def __init__(self, loci = None, metadata = None, **rest):
+        super().__init__(**rest)
         if loci is None: loci = []
         if metadata is None: metadata = {}
 
@@ -13,10 +16,6 @@ class FrequencyStudy():
 
         self.loci = { locus.name: locus for locus in loci }
         self.metadata = metadata
-        if len(user) > 0:
-            self.user = user
-        else:
-            self.user = None
 
     def get_freq(self, locus, allele):
         try:
@@ -69,15 +68,11 @@ class FrequencyStudy():
                     
             self.loci[locus['name']] = Locus(**locus)
 
-    def to_leapdna(self):
-        ret = drop_nones(self.__dict__)
+    def to_leapdna(self, top_level = False):
+        ret = super().to_leapdna(top_level)
         ret['loci'] = list(map(lambda l: l.to_leapdna(), self.loci.values()))
         return ret
-
-    @classmethod
-    def from_leapdna(cls, json):
-        return FrequencyStudy(json.get('loci', []), json.get('metadata', {}))
-
+    
     def __repr__(self):
         return '%s with %d loci' % (self.__class__, len(self.loci))
 

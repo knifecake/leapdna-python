@@ -1,9 +1,9 @@
 import unittest
 
-from leapdna import FrequencyStudy
-from leapdna.importers import load_file 
+from leapdna import Study
+from leapdna.read import load_file 
 
-class TestFrequencyStudy(unittest.TestCase):
+class TestStudy(unittest.TestCase):
     def setUp(self):
         self.fs = load_file('tests/stubs/sample1.json')
 
@@ -38,21 +38,22 @@ class TestFrequencyStudy(unittest.TestCase):
             ['Allele A', 0, 0, 0.4],
             ['Allele B', 0, 0, 0.59]
         ]
-        fs = FrequencyStudy()
+        fs = Study()
         fs.from_table(expected)
         self.assertEqual(fs.to_table(), expected)
 
     def test_calculate_frequencies(self):
-        fs = FrequencyStudy([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}, {'name': 'B', 'count': 5}]}])
+        fs = Study([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}, {'name': 'B', 'count': 5}]}])
         fs.calculate_frequencies()
 
         self.assertEqual(fs.loci['L1'].alleles['A'].frequency, 0.5)
         self.assertEqual(fs.loci['L1'].alleles['B'].frequency, 0.5)
 
     def test_leapdna(self):
-        fs = FrequencyStudy([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}]}])
+        fs = Study([{'name': 'L1', 'alleles': [{'name': 'A', 'count': 5}]}])
         expected = {
-            'type': 'frequency_study',
+            'type': 'study',
+            'metadata': {},
             'loci': [
                 {
                     'type': 'locus', 
@@ -64,3 +65,4 @@ class TestFrequencyStudy(unittest.TestCase):
             ]
         }
 
+        self.assertEqual(fs.to_leapdna(), expected)

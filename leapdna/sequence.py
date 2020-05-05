@@ -8,7 +8,7 @@ class Sequence(LeapdnaBlock):
                  refseq_name = None,
                  refseq_start = None,
                  refseq_end = None,
-                 repeat_units = [],
+                 repeat_motifs = [],
                  repeating_seq = None,
                  flank5_seq = None,
                  flank3_seq = None,
@@ -23,7 +23,7 @@ class Sequence(LeapdnaBlock):
         self.refseq_name = refseq_name
         self.refseq_start = refseq_start
         self.refseq_end = refseq_end
-        self.repeat_units = repeat_units
+        self.repeat_units = repeat_motifs
 
         self.dprops = {
             'repeating_seq': repeating_seq,
@@ -95,6 +95,12 @@ class Sequence(LeapdnaBlock):
     @repeating_region_bracketed.setter
     def flank3_bracketed(self, value):
         self.dprops['flank3_bracketed'] = value
+
+    def to_leapdna(self, top_level = False):
+        ret = super().to_leapdna(top_level)
+        if len(self.repeat_units) == 0:
+            del ret['repeat_units']
+        return ret
         
     def _seq_or_bracketed(self, index):
         '''Returns a sequence from the derived property dictionary. If the

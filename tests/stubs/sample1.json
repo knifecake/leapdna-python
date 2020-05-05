@@ -1,49 +1,60 @@
 {
+  "type": "study",
   "loci": [
     {
+      "type": "locus",
       "name": "Locus 1",
       "h_obs": 0.34,
       "n": 123,
       "alleles": [
         {
+          "type": "allele",
           "name": "Allele 1",
           "frequency": 0.800
         },
         {
+          "type": "allele",
           "name": "Allele 2",
           "frequency": 0.200
         }
       ]
     },
     {
+      "type": "locus",
       "name": "Locus 2",
       "h_obs": 0.78,
       "n": 120,
       "alleles": [
         {
+          "type": "allele",
           "name": "Allele 2",
           "frequency": 0.500
         },
         {
+          "type": "allele",
           "name": "Allele 3",
           "frequency": 0.480
         },
         {
+          "type": "allele",
           "name": "Allele 4",
           "frequency": 0.02
         }
       ]
     },
     {
+      "type": "locus",
       "name": "Locus 3",
       "h_obs": 0.56,
       "n": 113,
       "alleles": [
         {
+          "type": "allele",
           "name": "Allele A",
           "frequency": 0.4
         },
         {
+          "type": "allele",
           "name": "Allele B",
           "frequency": 0.590
         }

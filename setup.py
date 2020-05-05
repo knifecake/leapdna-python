@@ -4,7 +4,7 @@ with open("README.rst", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="leapdna", # Replace with your own username
+    name="leapdna",
     version="0.1.0",
     author="Elias Hernandis",
     author_email="eliashernandis@gmail.com",

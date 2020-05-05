@@ -1,8 +1,8 @@
 import unittest
 import json
 
-from leapdna import FrequencyStudy
-from leapdna.importers import *
+from leapdna import Study
+from leapdna.read import *
 
 expected_loci = [
     ['', 'Locus 1', 'Locus 2', 'Locus 3'],
@@ -25,7 +25,7 @@ expected_metadata = {
     }
 }
 
-class TestFrequencyStudyImporters(unittest.TestCase):
+class TestStudyImporters(unittest.TestCase):
     def test_load_tabular_file(self):
         fs = load_tabular_file('tests/stubs/sample1.csv',)
         self.assertEqual(fs.to_table(), expected_loci)
@@ -34,13 +34,21 @@ class TestFrequencyStudyImporters(unittest.TestCase):
         fs = load_tabular_file('tests/stubs/sample1-na.csv', na_string = 'NA')
         self.assertEqual(fs.to_table(), expected_loci)
 
-    def test_leapdna_import(self):
+    def test_leapdna_import_study(self):
         with open('tests/stubs/sample1.json') as f:
             data = json.loads(f.read())
-            fs = FrequencyStudy.from_leapdna(data)
+            fs = import_leapdna(data)
 
             self.assertEqual(fs.to_table(), expected_loci)
             self.assertEqual(fs.metadata, expected_metadata)
+
+    def test_leapdna_import_study2(self):
+        with open('tests/stubs/study.leapdna.json') as f:
+            data = json.loads(f.read())
+            fs = import_leapdna(data)
+
+            self.maxDiff = None
+            self.assertEqual(fs.to_leapdna(), data)
 
     def test_load_familias_file(self):
         fs = load_familias_file('tests/stubs/sample1.txt')

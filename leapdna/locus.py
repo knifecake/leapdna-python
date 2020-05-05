@@ -1,9 +1,12 @@
 import copy
 
+from .block import LeapdnaBlock
 from .allele import Allele
 from .utils import drop_nones
 
-class Locus():
+class Locus(LeapdnaBlock):
+    __block_type__ = 'locus'
+    
     def __init__(self,
         name,
         alleles = None,
@@ -14,10 +17,10 @@ class Locus():
         refseq_name = None,
         refseq_start = None,
         refseq_end = None,
-        **user):
+        **rest):
+        super().__init__(**rest)
 
         if alleles is None: alleles = []
-        self.dprops = {}
 
         self.name = name
         for i, allele in enumerate(alleles):
@@ -31,8 +34,7 @@ class Locus():
         self.chrom = chrom
         self.refseq_name = refseq_name
         self.refseq_start = refseq_start
-        self.refseq_end = refseq_end
-
+        self.refseq_end = refseq_end    
 
     @property
     def h_obs(self):
@@ -55,18 +57,16 @@ class Locus():
         assert value is None or 0 <= value and value <= 1, "h_exp is not between 0 and 1"
         self.dprops['h_exp'] = value
 
-    def to_leapdna(self):
-        ret = drop_nones(self.__dict__)
+    def to_leapdna(self, top_level = False):
+        ret = super().to_leapdna(top_level)
         ret['alleles'] = list(map(lambda a: a.to_leapdna(), self.alleles.values()))
-        del ret['dprops']
-        ret.update(drop_nones(self.dprops))
         return ret
 
     @property
     def sample_size(self):
         if self.dprops['sample_size'] is None:
             try:
-                self.dprops['sample_size'] = sum(map(lambda a: a.count, self.alleles.values()))
+                self.dprops['sample_size'] = self._sample_size_sum()
             except TypeError:
                 raise ValueError(f'some alleles have missing sample counts for locus {self.name}')
 
@@ -80,3 +80,9 @@ class Locus():
     def calculate_frequencies(self):
         for name in self.alleles:
             self.alleles[name].frequency = self.alleles[name].count / self.sample_size
+
+    def _allele_frequency_sum(self):
+        return sum(map(lambda a: a.frequency, self.alleles.values()))
+
+    def _sample_size_sum(self):
+        return sum(map(lambda a: a.count, self.alleles.values()))

@@ -5,13 +5,13 @@ from leapdna.allele import Allele
 
 class TestLocus(unittest.TestCase):
     def test_to_leapdna(self):
-        self.assertEqual(Locus('name').to_leapdna(), {'name': 'name', 'alleles': []})
+        self.assertEqual(Locus('name').to_leapdna(), {'name': 'name', 'alleles': [], 'type': 'locus'})
         self.assertEqual(Locus('name', [{'name':'a'}, {'name':'b'}]).to_leapdna(),
-                         {'name': 'name', 'alleles': [{'name':'a', 'type': 'allele'}, {'name':'b', 'type': 'allele' }]})
+                         {'name': 'name', 'type': 'locus', 'alleles': [{'name':'a', 'type': 'allele'}, {'name':'b', 'type': 'allele' }]})
 
     def test_to_leapdna_moves_dprops_to_top_level(self):
         self.assertEqual(Locus('name', sample_size = 23).to_leapdna(), 
-            {'name': 'name', 'sample_size': 23, 'alleles': [] })
+            {'name': 'name', 'sample_size': 23, 'alleles': [], 'type': 'locus' })
 
     def test_to_leapdna_returns_a_copy(self):
         l = Locus('lname')
@@ -55,3 +55,18 @@ class TestLocus(unittest.TestCase):
         with self.assertRaises(ValueError):
             locus.sample_size
 
+    def test_calculates_total_sample_size(self):
+        locus = Locus('name', alleles = [
+            Allele('a', count = 10),
+            Allele('b', count = 20)
+        ])
+
+        self.assertEqual(locus._sample_size_sum(), 30)
+
+    def test_calculates_total_frequencies(self):
+        locus = Locus('name', alleles = [
+            Allele('a', frequency = 0.25),
+            Allele('b', frequency = 0.25)
+        ])
+
+        self.assertEqual(locus._allele_frequency_sum(), 0.5)
