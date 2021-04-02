@@ -20,7 +20,7 @@ class LeapdnaBlob(dict):
             self.update(
                 {id: LeapdnaBlob.parse_block(data[id], id)
                  for id in ids})
-            self.resolve_deps()
+            self.resolve_all_deps()
 
         self.id_counter = 1
 
@@ -39,11 +39,16 @@ class LeapdnaBlob(dict):
             raise LeapdnaError(
                 f'unkwon block_type "{data["leapdna"]["block_type"]}"')
 
-    def resolve_deps(self):
+    def resolve_deps_of_type(self, type: str):
         for key in self:
-            if key == 'leapdna': continue
+            if self[key].block_type == type:
+                self[key].resolve_deps_from_blob(self)
 
-            self[key].resolve_deps_from_blob(self)
+    def resolve_all_deps(self):
+        self.resolve_deps_of_type('locus')
+        self.resolve_deps_of_type('allele')
+        self.resolve_deps_of_type('observation')
+        self.resolve_deps_of_type('study')
 
     def generate_id(self, block: Base) -> str:
         if block.id is None or (block.id in self):

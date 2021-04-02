@@ -6,7 +6,7 @@ from .allele import Allele
 
 class Observation(Base):
     block_type = 'observation'
-    allele: Union[Allele, str]
+    allele: Allele
     count: Optional[int]
     frequency: Optional[float]
 
@@ -18,14 +18,18 @@ class Observation(Base):
                  **kwargs):
         super().__init__(block_type=self.block_type, *args,
                          **kwargs)  # type: ignore
-        self.allele = allele
+        if isinstance(allele, Allele):
+            self.allele = allele
+        else:
+            self.allele_id = allele
+
         self.count = count
         self.frequency = frequency
 
     @property
-    def locus(self) -> Union[Locus, str]:
+    def locus(self) -> Locus:
         return self.allele.locus
 
     def resolve_deps_from_blob(self, blob):
-        if isinstance(self.allele, str) and self.allele in blob:
-            self.allele = blob[self.allele]
+        if self.allele_id and self.allele_id in blob:
+            self.allele = blob[self.allele_id]

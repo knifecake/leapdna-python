@@ -1,12 +1,12 @@
 import json
-from typing import IO, Optional
+from typing import Any, IO, Optional
 
 
 class Base:
     block_type = 'base'
     id: Optional[str] = None
 
-    user = None
+    user: Any = None
 
     def __init__(self,
                  block_type: str = 'base',

@@ -7,20 +7,21 @@ from leapdna.blocks.locus import Locus
 class Allele(Base):
     block_type: str = 'allele'
     name: str
-    locus: Union[Locus, str]
+    locus: Locus
 
     def __init__(self, name: str, locus: Union[Locus, str], *args, **kwargs):
         super().__init__(block_type=self.block_type, *args,
                          **kwargs)  # type: ignore
 
         self.name = name
-        self.locus = locus
+        if isinstance(locus, Locus):
+            self.locus = locus
+        else:
+            self.locus_id = locus
 
     def resolve_deps_from_blob(self, blob):
-        if isinstance(self.locus, str) and self.locus in blob:
-            locus = blob[self.locus]
-            if locus.block_type == 'locus':
-                self.locus = blob[self.locus]
+        if self.locus_id and self.locus_id in blob:
+            self.locus = blob[self.locus_id]
 
     def __str__(self):
         return f'<{self.block_type.capitalize()}: {self.name}@{self.locus}>'
