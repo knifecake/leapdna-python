@@ -37,7 +37,7 @@ class Base:
     def resolve_deps_from_blob(self, blob):
         pass
 
-    def asdict(self):
+    def asdict(self, without_deps=False):
         return {
             'leapdna': {
                 'block_type': self.block_type,

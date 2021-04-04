@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="leapdna",
-    version="0.1.0",
+    version="0.2.0",
     author="Elias Hernandis",
     author_email="elias@hernandis.me",
     description="A Python 3.9 implementation of the leapdna toolkit",

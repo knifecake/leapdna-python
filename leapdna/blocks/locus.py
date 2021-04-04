@@ -14,6 +14,7 @@ class Locus(Base):
                  name: str,
                  coords: Optional[Coords] = None,
                  band: Optional[str] = None,
+                 id: Optional[str] = None,
                  *args,
                  **kwargs):
         super().__init__(block_type=self.block_type, *args,
@@ -21,6 +22,7 @@ class Locus(Base):
         self.coords = coords
         self.band = band
         self.name = name
+        self.id = id or self.name
 
     def get_coords(self, guess=True):
         """Returns a triple (chr, start, stop) with the coordinates of the locus
@@ -32,3 +34,12 @@ class Locus(Base):
         if guess and self.band:
             return band2coords(self.band)
         return None
+
+    def asdict(self, without_deps=False):
+        ret = super().asdict(without_deps=without_deps)
+        ret.update({
+            'name': self.name,
+            'band': self.band,
+            'coords': self.coords
+        })
+        return ret

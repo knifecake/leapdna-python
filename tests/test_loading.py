@@ -1,3 +1,4 @@
+from leapdna.errors import LeapdnaError
 from leapdna.blocks.allele import Allele
 from leapdna.blocks.base import Base
 from .support import TestCase
@@ -190,3 +191,53 @@ class TestFromdict(TestCase):
         res = LeapdnaBlob(data)
         self.assertEqual(res['o1'].locus, res['l1'])
         self.assertEqual(res['o1'].allele, res['a1'])
+
+    def test_studies_need_full_resolution(self):
+        data = {
+            'leapdna': {
+                'block_type': 'blob'
+            },
+            'a1': {
+                'name': 'a1',
+                'locus': 'l1',
+                'leapdna': {
+                    'block_type': 'allele'
+                }
+            },
+            'a2': {
+                'name': 'a2',
+                'locus': 'l1',
+                'leapdna': {
+                    'block_type': 'allele'
+                }
+            },
+            'l1': {
+                'name': 'l1',
+                'leapdna': {
+                    'block_type': 'locus'
+                }
+            },
+            'o1': {
+                'allele': 'a1',
+                'count': 10,
+                'leapdna': {
+                    'block_type': 'observation'
+                }
+            },
+            'o2': {
+                'allele': 'a2',
+                'count': 90,
+                'leapdna': {
+                    'block_type': 'observation'
+                }
+            },
+            's1': {
+                'observations': ['o1', 'o2', 'o3'],
+                'leapdna': {
+                    'block_type': 'study'
+                }
+            }
+        }
+
+        with self.assertRaises(LeapdnaError):
+            LeapdnaBlob(data)

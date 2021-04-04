@@ -14,6 +14,7 @@ class Observation(Base):
                  allele: Union[Allele, str],
                  count: Optional[int] = None,
                  frequency: Optional[float] = None,
+                 id: Optional[str] = None,
                  *args,
                  **kwargs):
         super().__init__(block_type=self.block_type, *args,
@@ -25,6 +26,7 @@ class Observation(Base):
 
         self.count = count
         self.frequency = frequency
+        self.id = id or f'observation_{self.allele.id}'
 
     @property
     def locus(self) -> Locus:
@@ -33,3 +35,16 @@ class Observation(Base):
     def resolve_deps_from_blob(self, blob):
         if self.allele_id and self.allele_id in blob:
             self.allele = blob[self.allele_id]
+
+    def asdict(self, without_deps=False):
+        ret = super().asdict(without_deps=without_deps)
+        ret.update({
+            'allele': self.allele.id,
+            'count': self.count,
+            'frequency': self.frequency
+        })
+
+        if without_deps:
+            ret['allele'] = self.allele.asdict(without_deps=True)
+
+        return ret

@@ -37,7 +37,7 @@ To run the leapdna test suite execute
 python3 -m unittest
 ```
 
-from the root of the leapdna repository.
+from the root of the leapdna repository. Test coverage can be calculated with the `coverage` Python package. To do so, first run the tests with `coverage run --source leapdna -m unittest discover` and then get the report with `coverage report -m`.
 
 In addition, leapdna comes with type annotations which allows for running it through a type checker such as `mypy`. This can be done by executing `mypy leapdna` from the root of the repository. If you do not have `mypy` installed you may do so with `python3 -m pip install mypy`.
 

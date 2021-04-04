@@ -1,10 +1,9 @@
-from leapdna.blocks import locus
-from leapdna.blocks.allele import Allele
-from leapdna.blocks.locus import Locus
 from typing import Dict, Optional, Sequence, Union
 
+from leapdna.blocks.allele import Allele
 from leapdna.blocks.base import Base
 from leapdna.blocks.observation import Observation
+from leapdna.errors import LeapdnaError
 
 
 class Study(Base):
@@ -13,13 +12,17 @@ class Study(Base):
     observation_ids: Sequence[str]
     allele_index: Dict[Allele, Observation]
 
-    def __init__(self, observations: Sequence[Union[Observation, str]], *args,
+    def __init__(self,
+                 observations: Sequence[Union[Observation, str]],
+                 id: Optional[str] = None,
+                 *args,
                  **kwargs):
         super().__init__(block_type=self.block_type, *args,
                          **kwargs)  # type: ignore
 
         if all(isinstance(obs, Observation) for obs in observations):
-            self.observation_ids = []
+            self.observation_ids = \
+                [obs.id for obs in observations]  # type: ignore
             self.observation_list = observations  # type: ignore
             self.calculate_frequencies()
             self.rebuild_indices()
@@ -27,12 +30,14 @@ class Study(Base):
             self.observation_ids = observations  # type: ignore
             self.observation_list = []
 
+        self.id = id or 'study_default_id'
+
     def resolve_deps_from_blob(self, blob):
         def _resolve_observation(obs):
             if isinstance(obs, str) and obs in blob:
                 return blob[obs]
 
-            return obs
+            raise LeapdnaError(f'Could not resolve observation "{obs}".')
 
         self.observation_list = [
             _resolve_observation(item) for item in self.observation_ids
@@ -77,3 +82,12 @@ class Study(Base):
             return obs[0].frequency or 0
         except IndexError:
             return 0
+
+    def asdict(self, without_deps=False):
+        ret = super().asdict(without_deps=without_deps)
+        ret.update({'observations': self.observation_ids})
+        if without_deps:
+            ret['observations'] = [
+                obs.asdict(without_deps=True) for obs in self.observation_list
+            ]
+        return ret
