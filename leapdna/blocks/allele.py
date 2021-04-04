@@ -40,3 +40,6 @@ class Allele(Base):
             ret['locus'] = self.locus.asdict(without_deps=True)
 
         return ret
+
+    def block_deps(self):
+        return {self.locus.id: self.locus}

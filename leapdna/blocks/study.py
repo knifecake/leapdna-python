@@ -24,7 +24,7 @@ class Study(Base):
             self.observation_ids = \
                 [obs.id for obs in observations]  # type: ignore
             self.observation_list = observations  # type: ignore
-            self.calculate_frequencies()
+            # self.calculate_frequencies()
             self.rebuild_indices()
         else:
             self.observation_ids = observations  # type: ignore
@@ -90,4 +90,14 @@ class Study(Base):
             ret['observations'] = [
                 obs.asdict(without_deps=True) for obs in self.observation_list
             ]
+        return ret
+
+    def block_deps(self):
+        if not self.observation_list: return {}
+
+        ret = {}
+        for obs in self.observation_list:
+            ret.update(obs.block_deps())
+            ret[obs.id] = obs
+
         return ret

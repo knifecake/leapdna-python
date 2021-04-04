@@ -18,6 +18,7 @@ class TestStudyBlock(TestCase):
             Observation(a3, count=10),
             Observation(a4, count=90)
         ])
+        study.calculate_frequencies()
         self.assertTrue(study is not None)
         self.assertEqual(study.get_freq(a1), 0.5)
         self.assertEqual(study.get_freq(a3), 0.1)

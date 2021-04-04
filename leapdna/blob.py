@@ -53,7 +53,32 @@ class LeapdnaBlob(dict):
     def generate_id(self, block: Base) -> str:
         if block.id is None or (block.id in self):
             self.id_counter += 1
-            id = f'g.{self.id_counter}'
             block.id = f'g.{self.id_counter}'
 
         return block.id
+
+    def append(self, block: Base):
+        if not isinstance(block, Base):
+            raise LeapdnaError('Given object is not a leapdna block')
+
+        if not block.id:
+            block.id = self.generate_id(block)
+
+        new_blocks = {block.id: block}
+        new_blocks.update(block.block_deps())
+
+        invalid_ids = {
+            id
+            for id in new_blocks if id in self and self[id] != new_blocks[id]
+        }
+        if len(invalid_ids) > 0:
+            raise LeapdnaError(
+                'Invalid ids do not match already existing blocks: ' +
+                ', '.join(invalid_ids))
+
+        self.update(new_blocks)  # type: ignore
+
+    def asdict(self):
+        ret = {id: block.asdict() for id, block in self.items()}
+        ret['leapdna'] = {'block_type': 'blob'}
+        return ret

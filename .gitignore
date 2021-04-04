@@ -6,5 +6,5 @@ build
 *.egg-info
 .vscode
 .coverage
-Makefile
+coverage.xml
 .mypy_cache

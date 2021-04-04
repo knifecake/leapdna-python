@@ -48,3 +48,8 @@ class Observation(Base):
             ret['allele'] = self.allele.asdict(without_deps=True)
 
         return ret
+
+    def block_deps(self):
+        ret = {self.allele.id: self.allele}
+        ret.update(self.allele.block_deps())
+        return ret

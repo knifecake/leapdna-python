@@ -1,5 +1,8 @@
 # 👩‍🔬 leapdna.py
 
+![testing](https://github.com/knifecake/leapdna-python/actions/workflows/python-test.yml/badge.svg)
+[![codecov](https://codecov.io/gh/knifecake/leapdna-python/branch/main/graph/badge.svg?token=MRBIM6HURG)](https://codecov.io/gh/knifecake/leapdna-python)
+
 An implementation of the leapdna toolkit in Python.
 
 ## Installation

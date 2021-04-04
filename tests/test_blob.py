@@ -1,3 +1,4 @@
+from leapdna import blob
 from leapdna.blocks.locus import Locus
 from leapdna.errors import LeapdnaError
 from leapdna import blocks
@@ -60,3 +61,23 @@ class TestFromdict(TestCase):
         gen_id = blob.generate_id(block)
         self.assertEqual(gen_id, block.id)
         self.assertEqual(blob.id_counter, initial_counter)
+
+    def test_cannot_append_non_leapdna_block(self):
+        blob = LeapdnaBlob()
+        with self.assertRaises(LeapdnaError):
+            blob.append(1)
+
+    def test_autogenerates_ids_for_blocks(self):
+        blob = LeapdnaBlob()
+        block = Base()
+        self.assertTrue(block.id is None)
+        blob.append(block)
+        self.assertFalse(block.id is None)
+
+    def test_cannot_add_two_blocks_with_same_id(self):
+        b1 = Base(id='1')
+        b2 = Base(id='1')
+        blob = LeapdnaBlob()
+        blob.append(b1)
+        with self.assertRaises(LeapdnaError):
+            blob.append(b2)

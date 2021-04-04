@@ -22,10 +22,16 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install mypy
+        python -m pip install mypy coverage
     - name: Type check with mypy
       run: |
         mypy leapdna
     - name: Test with unittest
       run: |
-        python -m unittest discover
+        coverage run --source leapdna -m unittest discover
+
+    - name: "Upload coverage to Codecov"
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: true

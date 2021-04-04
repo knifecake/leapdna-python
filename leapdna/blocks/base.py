@@ -1,5 +1,5 @@
 import json
-from typing import Any, IO, Optional
+from typing import Any, Dict, IO, Optional
 
 
 class Base:
@@ -36,6 +36,11 @@ class Base:
 
     def resolve_deps_from_blob(self, blob):
         pass
+
+    def block_deps(self):
+        """Returns a flat dictionary of (block id, block) pairs containing every block dependency
+        of this block or of any of its dependencies."""
+        return {}
 
     def asdict(self, without_deps=False):
         return {
