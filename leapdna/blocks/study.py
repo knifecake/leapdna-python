@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Sequence, Union
+from typing import Any, Dict, Optional, Sequence, Union
 
 from leapdna.blocks.allele import Allele
 from leapdna.blocks.base import Base
@@ -11,14 +11,17 @@ class Study(Base):
     observation_list: Sequence[Observation]
     observation_ids: Sequence[str]
     allele_index: Dict[Allele, Observation]
+    name: Optional[str]
+    metadata: Dict[str, Any]
 
     def __init__(self,
                  observations: Sequence[Union[Observation, str]],
+                 name: Optional[str] = None,
                  id: Optional[str] = None,
+                 metadata: Optional[Dict[str, Any]] = None,
                  *args,
                  **kwargs):
-        super().__init__(block_type=self.block_type, *args,
-                         **kwargs)  # type: ignore
+        super().__init__(*args, **kwargs)  # type: ignore
 
         if all(isinstance(obs, Observation) for obs in observations):
             self.observation_ids = \
@@ -30,7 +33,9 @@ class Study(Base):
             self.observation_ids = observations  # type: ignore
             self.observation_list = []
 
-        self.id = id or 'study_default_id'
+        self.id = id or name or 'study_default_id'
+        self.name = name
+        self.metadata = metadata or {}
 
     def resolve_deps_from_blob(self, blob):
         def _resolve_observation(obs):
@@ -83,9 +88,24 @@ class Study(Base):
         except IndexError:
             return 0
 
+    def prefix_observation_ids(self, id=None):
+        if id is None:
+            id = self.id
+        for obs in self.observation_list:
+            obs.id = id + '_' + obs.id
+        self.observation_ids = [obs.id for obs in self.observation_list]
+
+    @property
+    def loci(self):
+        return set(obs.locus for obs in self.observation_list)
+
     def asdict(self, without_deps=False):
         ret = super().asdict(without_deps=without_deps)
-        ret.update({'observations': self.observation_ids})
+        ret.update({
+            'observations': self.observation_ids,
+            'name': self.name,
+            'metadata': self.metadata
+        })
         if without_deps:
             ret['observations'] = [
                 obs.asdict(without_deps=True) for obs in self.observation_list

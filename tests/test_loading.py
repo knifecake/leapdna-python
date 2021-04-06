@@ -8,15 +8,7 @@ from leapdna.blob import LeapdnaBlob
 
 class TestFromdict(TestCase):
     def test_loads_single_base_block(self):
-        data = {
-            'leapdna': {
-                'block_type': 'base',
-                'id': 1234
-            },
-            'user': {
-                'custom_prop': 123
-            }
-        }
+        data = {'block_type': 'base', 'id': 1234, 'user': {'custom_prop': 123}}
 
         res = LeapdnaBlob.parse_block(data)
         self.assertTrue(isinstance(res, Base))
@@ -26,32 +18,18 @@ class TestFromdict(TestCase):
         """Tests that objects in blobs get the id of the key in which they are stored
         in the blob, even if it is different from the one specified in the 'leapdna'
         part of the block."""
-        data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
-            'b1': {
-                'leapdna': {
-                    'block_type': 'base',
-                    'id': 'something_else'
-                }
-            }
-        }
+        data = {'block_type': 'blob', 'b1': {'block_type': 'base'}}
         res = LeapdnaBlob(data)
         self.assertIn('b1', res)
         self.assertEqual(res['b1'].id, 'b1')
 
     def test_loads_blob_with_allele(self):
         data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
+            'block_type': 'blob',
             'a1': {
                 'name': 'a1',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
             }
         }
         res = LeapdnaBlob(data)
@@ -60,21 +38,20 @@ class TestFromdict(TestCase):
 
     def test_loads_blob_with_allele_and_locus(self):
         data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
+            'block_type': 'blob',
             'a1': {
                 'name': 'a1',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
+            },
+            'a2': {
+                'name': 'a2',
+                'locus': 'l1',
+                'block_type': 'allele'
             },
             'l1': {
                 'name': 'l1',
-                'leapdna': {
-                    'block_type': 'locus'
-                }
+                'block_type': 'locus'
             }
         }
         res = LeapdnaBlob(data)
@@ -82,28 +59,30 @@ class TestFromdict(TestCase):
 
     def test_loads_blob_with_observation(self):
         data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
+            'block_type': 'blob',
             'a1': {
                 'name': 'a1',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
+            },
+            'a2': {
+                'name': 'a2',
+                'locus': 'l1',
+                'block_type': 'allele'
             },
             'l1': {
                 'name': 'l1',
-                'leapdna': {
-                    'block_type': 'locus'
-                }
+                'block_type': 'locus'
             },
             'o1': {
-                'locus': 'l1',
                 'allele': 'a1',
-                'leapdna': {
-                    'block_type': 'observation'
-                }
+                'count': 10,
+                'block_type': 'observation'
+            },
+            'o2': {
+                'allele': 'a2',
+                'count': 90,
+                'block_type': 'observation'
             }
         }
         res = LeapdnaBlob(data)
@@ -112,28 +91,25 @@ class TestFromdict(TestCase):
 
     def test_loads_blob_with_observation_summary(self):
         data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
+            'block_type': 'blob',
             'a1': {
                 'name': 'a1',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
+            },
+            'a2': {
+                'name': 'a2',
+                'locus': 'l1',
+                'block_type': 'allele'
             },
             'l1': {
                 'name': 'l1',
-                'leapdna': {
-                    'block_type': 'locus'
-                }
+                'block_type': 'locus'
             },
             'o1': {
                 'allele': 'a1',
                 'count': 23,
-                'leapdna': {
-                    'block_type': 'observation'
-                }
+                'block_type': 'observation'
             }
         }
         res = LeapdnaBlob(data)
@@ -143,48 +119,34 @@ class TestFromdict(TestCase):
 
     def test_loads_study(self):
         data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
+            'block_type': 'blob',
             'a1': {
                 'name': 'a1',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
             },
             'a2': {
                 'name': 'a2',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
             },
             'l1': {
                 'name': 'l1',
-                'leapdna': {
-                    'block_type': 'locus'
-                }
+                'block_type': 'locus'
             },
             'o1': {
                 'allele': 'a1',
                 'count': 10,
-                'leapdna': {
-                    'block_type': 'observation'
-                }
+                'block_type': 'observation'
             },
             'o2': {
                 'allele': 'a2',
                 'count': 90,
-                'leapdna': {
-                    'block_type': 'observation'
-                }
+                'block_type': 'observation'
             },
             's1': {
                 'observations': ['o1', 'o2'],
-                'leapdna': {
-                    'block_type': 'study'
-                }
+                'block_type': 'study'
             }
         }
 
@@ -194,48 +156,34 @@ class TestFromdict(TestCase):
 
     def test_studies_need_full_resolution(self):
         data = {
-            'leapdna': {
-                'block_type': 'blob'
-            },
+            'block_type': 'blob',
             'a1': {
                 'name': 'a1',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
             },
             'a2': {
                 'name': 'a2',
                 'locus': 'l1',
-                'leapdna': {
-                    'block_type': 'allele'
-                }
+                'block_type': 'allele'
             },
             'l1': {
                 'name': 'l1',
-                'leapdna': {
-                    'block_type': 'locus'
-                }
+                'block_type': 'locus'
             },
             'o1': {
                 'allele': 'a1',
                 'count': 10,
-                'leapdna': {
-                    'block_type': 'observation'
-                }
+                'block_type': 'observation'
             },
             'o2': {
                 'allele': 'a2',
                 'count': 90,
-                'leapdna': {
-                    'block_type': 'observation'
-                }
+                'block_type': 'observation'
             },
             's1': {
                 'observations': ['o1', 'o2', 'o3'],
-                'leapdna': {
-                    'block_type': 'study'
-                }
+                'block_type': 'study'
             }
         }
 

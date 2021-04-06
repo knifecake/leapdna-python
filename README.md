@@ -48,4 +48,4 @@ In addition, leapdna comes with type annotations which allows for running it thr
 
 Copyright 2021 Elias Hernandis
 
-Leapdna is free and open-source sofware released under the [MIT License](https://choosealicense.com/licenses/mit/ "A human-friendly overview of the MIT license"). Everyone is free to copy, modify and redistribute the sofware, even for commercial purposes. While no attribution is required, it is very much appreciated. The full text of the license is available [here](https://github.com/knifecake/leapdna-python/blob/master/LICENSE "Full text of the leapdna license (MIT License)").
+Leapdna is free and open-source sofware released under the [MIT License](https://choosealicense.com/licenses/mit/ "A human-friendly overview of the MIT license"). Everyone is free to copy, modify and redistribute the sofware, even for commercial purposes. While no attribution is required, it is very much appreciated. The full text of the license is available [here](https://github.com/knifecake/leapdna-python/blob/main/LICENSE "Full text of the leapdna license (MIT License)").

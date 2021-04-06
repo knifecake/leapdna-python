@@ -29,3 +29,5 @@ class TestStudyBlock(TestCase):
         # force index rebuild
         study.allele_index = None
         self.assertEqual(study.get_freq(a3), 0.1)
+
+        self.assertCountEqual(study.loci, [l1, l2])

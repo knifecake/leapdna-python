@@ -17,8 +17,7 @@ class Observation(Base):
                  id: Optional[str] = None,
                  *args,
                  **kwargs):
-        super().__init__(block_type=self.block_type, *args,
-                         **kwargs)  # type: ignore
+        super().__init__(*args, **kwargs)  # type: ignore
         if isinstance(allele, Allele):
             self.allele = allele
         else:
@@ -26,7 +25,7 @@ class Observation(Base):
 
         self.count = count
         self.frequency = frequency
-        self.id = id or f'observation_{self.allele.id}'
+        self.id = id or f'obs_{self.allele.id}'
 
     @property
     def locus(self) -> Locus:

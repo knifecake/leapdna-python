@@ -17,8 +17,7 @@ class Locus(Base):
                  id: Optional[str] = None,
                  *args,
                  **kwargs):
-        super().__init__(block_type=self.block_type, *args,
-                         **kwargs)  # type: ignore
+        super().__init__(*args, **kwargs)  # type: ignore
         self.coords = coords
         self.band = band
         self.name = name

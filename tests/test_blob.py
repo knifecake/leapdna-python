@@ -18,12 +18,12 @@ class TestFromdict(TestCase):
         with self.assertRaises(LeapdnaError):
             LeapdnaBlob(data)
 
-        data = {'leapdna': {'block_type': 'locus'}, 'name': 'l1'}
+        data = {'block_type': 'locus', 'name': 'l1'}
         with self.assertRaises(LeapdnaError):
             LeapdnaBlob(data)
 
     def test_parse_block(self):
-        data = {'leapdna': {'block_type': 'locus'}, 'name': 'l1'}
+        data = {'block_type': 'locus', 'name': 'l1'}
         locus = LeapdnaBlob.parse_block(data)
         self.assertTrue(isinstance(locus, Locus))
         self.assertTrue(locus.name, 'l1')
@@ -33,11 +33,11 @@ class TestFromdict(TestCase):
         with self.assertRaises(LeapdnaError):
             LeapdnaBlob.parse_block(data)
 
-        data = {'leapdna': {'incomplete': True}}
+        data = {'incomplete': True}
         with self.assertRaises(LeapdnaError):
             LeapdnaBlob.parse_block(data)
 
-        data = {'leapdna': {'block_type': 'bogus'}, 'name': 'l1'}
+        data = {'block_type': 'bogus', 'name': 'l1'}
         with self.assertRaises(LeapdnaError):
             LeapdnaBlob.parse_block(data)
 
@@ -74,10 +74,10 @@ class TestFromdict(TestCase):
         blob.append(block)
         self.assertFalse(block.id is None)
 
-    def test_cannot_add_two_blocks_with_same_id(self):
-        b1 = Base(id='1')
-        b2 = Base(id='1')
+    def test_cannot_append_different_blocks_with_same_id(self):
         blob = LeapdnaBlob()
-        blob.append(b1)
+        b1 = Base(id='123')
+        b2 = Locus(name='123')
         with self.assertRaises(LeapdnaError):
+            blob.append(b1)
             blob.append(b2)

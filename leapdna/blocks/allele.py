@@ -15,8 +15,7 @@ class Allele(Base):
                  id: Optional[str] = None,
                  *args,
                  **kwargs):
-        super().__init__(block_type=self.block_type, *args,
-                         **kwargs)  # type: ignore
+        super().__init__(*args, **kwargs)  # type: ignore
 
         self.name = name
         if isinstance(locus, Locus):
@@ -24,7 +23,7 @@ class Allele(Base):
         else:
             self.locus_id = locus
 
-        self.id = id or self.name
+        self.id = id or f'{self.name}@{self.locus.id}'
 
     def resolve_deps_from_blob(self, blob):
         if self.locus_id and self.locus_id in blob:

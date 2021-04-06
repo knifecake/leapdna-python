@@ -8,8 +8,8 @@ class TestAsdict(TestCase):
         block = Base(id='id1', user={'field': 'value'})
         d = block.asdict()
 
-        self.assertEqual(d['leapdna']['id'], 'id1')
-        self.assertEqual(d['leapdna']['block_type'], 'base')
+        self.assertEqual(d['id'], 'id1')
+        self.assertEqual(d['block_type'], 'base')
         self.assertEqual(d['user']['field'], 'value')
 
     def test_locus_block_asdict(self):
@@ -19,8 +19,8 @@ class TestAsdict(TestCase):
                       id='l1',
                       user={'field': 'value'})
         d = locus.asdict()
-        self.assertEqual(d['leapdna']['id'], 'l1')
-        self.assertEqual(d['leapdna']['block_type'], 'locus')
+        self.assertEqual(d['id'], 'l1')
+        self.assertEqual(d['block_type'], 'locus')
         self.assertEqual(d['name'], 'l1')
         self.assertEqual(d['band'], 'test_band')
         self.assertEqual(d['coords'], ('X', 10, 30))
@@ -31,14 +31,14 @@ class TestAsdict(TestCase):
         allele = Allele(name='a1', locus=l1, id='a1')
         d = allele.asdict()
 
-        self.assertEqual(d['leapdna']['id'], 'a1')
-        self.assertEqual(d['leapdna']['block_type'], 'allele')
+        self.assertEqual(d['id'], 'a1')
+        self.assertEqual(d['block_type'], 'allele')
         self.assertEqual(d['name'], 'a1')
         self.assertEqual(d['locus'], 'l1')
 
         d = allele.asdict(without_deps=True)
-        self.assertEqual(d['leapdna']['id'], 'a1')
-        self.assertEqual(d['leapdna']['block_type'], 'allele')
+        self.assertEqual(d['id'], 'a1')
+        self.assertEqual(d['block_type'], 'allele')
         self.assertEqual(d['name'], 'a1')
         self.assertEqual(d['locus'], l1.asdict(without_deps=True))
 
@@ -48,15 +48,15 @@ class TestAsdict(TestCase):
         observation = Observation(a1, count=10, frequency=0.1)
 
         d = observation.asdict()
-        self.assertEqual(d['leapdna']['id'], 'observation_a1')
-        self.assertEqual(d['leapdna']['block_type'], 'observation')
+        self.assertEqual(d['id'], 'obs_a1')
+        self.assertEqual(d['block_type'], 'observation')
         self.assertEqual(d['allele'], 'a1')
         self.assertEqual(d['count'], 10)
         self.assertEqual(d['frequency'], 0.1)
 
         d = observation.asdict(without_deps=True)
-        self.assertEqual(d['leapdna']['id'], 'observation_a1')
-        self.assertEqual(d['leapdna']['block_type'], 'observation')
+        self.assertEqual(d['id'], 'obs_a1')
+        self.assertEqual(d['block_type'], 'observation')
         self.assertEqual(d['allele'], a1.asdict(without_deps=True))
 
     def test_study_block_asdict(self):
@@ -66,11 +66,11 @@ class TestAsdict(TestCase):
         study = Study(observations=[o1], id='s1')
 
         d = study.asdict()
-        self.assertEqual(d['leapdna']['id'], 's1')
-        self.assertEqual(d['leapdna']['block_type'], 'study')
+        self.assertEqual(d['id'], 's1')
+        self.assertEqual(d['block_type'], 'study')
         self.assertEqual(d['observations'], ['o1'])
 
         d = study.asdict(without_deps=True)
-        self.assertEqual(d['leapdna']['id'], 's1')
-        self.assertEqual(d['leapdna']['block_type'], 'study')
+        self.assertEqual(d['id'], 's1')
+        self.assertEqual(d['block_type'], 'study')
         self.assertEqual(d['observations'], [o1.asdict(without_deps=True)])

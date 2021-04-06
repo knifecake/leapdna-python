@@ -7,16 +7,12 @@ class LeapdnaBlob(dict):
 
     def __init__(self, data=None):
         if data:
-            if not ('leapdna' in data):
-                raise LeapdnaError('data is not a leapdna object')
-
-            if 'block_type' not in data[
-                    'leapdna'] or data['leapdna']['block_type'] != 'blob':
+            if 'block_type' not in data or data['block_type'] != 'blob':
                 raise LeapdnaError(
                     'data is not a leapdna blob. Try loading with LeapdnaBlob.parse_block instead.'
                 )
 
-            ids = set(data.keys()) - {'leapdna'}
+            ids = set(data.keys()) - {'block_type', 'id'}
             self.update(
                 {id: LeapdnaBlob.parse_block(data[id], id)
                  for id in ids})
@@ -26,18 +22,15 @@ class LeapdnaBlob(dict):
 
     @staticmethod
     def parse_block(data, id=None) -> Base:
-        if not ('leapdna' in data):
-            raise LeapdnaError('object is not a leapdna block')
-
-        if not ('block_type' in data['leapdna']):
+        if not ('block_type' in data):
             raise LeapdnaError('"block_type" not specified in block')
-
+        if id:
+            data['id'] = id
         try:
-            block = BLOCKTYPE_MAP[data['leapdna']['block_type']]
-            return block(**data, id=id)
+            block = BLOCKTYPE_MAP[data['block_type']]
+            return block(**data)
         except KeyError:
-            raise LeapdnaError(
-                f'unkwon block_type "{data["leapdna"]["block_type"]}"')
+            raise LeapdnaError(f'unkwon block_type "{data["block_type"]}"')
 
     def resolve_deps_of_type(self, type: str):
         for key in self:
@@ -80,5 +73,5 @@ class LeapdnaBlob(dict):
 
     def asdict(self):
         ret = {id: block.asdict() for id, block in self.items()}
-        ret['leapdna'] = {'block_type': 'blob'}
+        ret['block_type'] = 'blob'
         return ret

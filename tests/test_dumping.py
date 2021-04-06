@@ -8,15 +8,16 @@ class TestDumping(TestCase):
         l1 = Locus('l1')
         a1 = Allele('a1', l1)
         a2 = Allele('a2', l1)
-        study = Study([
-            Observation(a1, frequency=0.25, id='o1'),
-            Observation(a2, frequency=0.75, id='o2')
-        ],
-                      id='study_id')
+        study = Study(
+            [Observation(a1, frequency=0.25),
+             Observation(a2, frequency=0.75)],
+            id='st1')
+        study.prefix_observation_ids()
 
         blob = LeapdnaBlob()
         blob.append(study)
-
         res = blob.asdict()
-        self.assertCountEqual(
-            res.keys(), ['leapdna', 'l1', 'a1', 'a2', 'o1', 'o2', 'study_id'])
+        self.assertCountEqual(res.keys(), [
+            'l1', 'a1@l1', 'a2@l1', 'st1_obs_a1@l1', 'st1_obs_a2@l1', 'st1',
+            'block_type'
+        ])

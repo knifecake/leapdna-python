@@ -1,32 +1,24 @@
-import json
-from typing import Any, Dict, IO, Optional
+from leapdna.errors import LeapdnaError
+from typing import Any, Dict, Optional
 
 
 class Base:
     block_type = 'base'
     id: Optional[str] = None
 
-    user: Any = None
+    user: Dict[str, Any]
 
     def __init__(self,
-                 block_type: str = 'base',
-                 id: str = None,
-                 user=None,
-                 leapdna=None,
+                 id: Optional[str] = None,
+                 user: Optional[Dict[str, Any]] = None,
                  *args,
                  **kwargs):
-        if leapdna is not None:
-            # direct arguments take precedence over those in leapdna
-            block_type = block_type or leapdna.get('block_type', None)
-            id = id or leapdna.get('id', None)
-
         self.id = id
-        self.block_type = block_type
 
-        if user is None:
-            self.user = {}
-        else:
+        if user:
             self.user = user
+        else:
+            self.user = {}
 
     def __str__(self):
         return f'<leapdna block {self.block_type}: {self.id}>'
@@ -44,9 +36,16 @@ class Base:
 
     def asdict(self, without_deps=False):
         return {
-            'leapdna': {
-                'block_type': self.block_type,
-                'id': self.id
-            },
+            'block_type': self.block_type,
+            'id': self.id,
             'user': self.user
         }
+
+    def __eq__(self, o: object) -> bool:
+        if isinstance(o, type(self)):
+            return o.id == self.id
+
+        return False
+
+    def __hash__(self) -> int:
+        return hash(self.id)
