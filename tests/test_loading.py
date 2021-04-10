@@ -146,13 +146,22 @@ class TestFromdict(TestCase):
             },
             's1': {
                 'observations': ['o1', 'o2'],
-                'block_type': 'study'
+                'block_type': 'study',
+                'loci_metadata': {
+                    'l1': {
+                        'sample_size': 100
+                    },
+                    'l2': {
+                        'sample_size': 100
+                    }
+                }
             }
         }
 
         res = LeapdnaBlob(data)
         self.assertEqual(res['o1'].locus, res['l1'])
         self.assertEqual(res['o1'].allele, res['a1'])
+        self.assertEqual(res['s1'].loci_metadata['l1']['sample_size'], 100)
 
     def test_studies_need_full_resolution(self):
         data = {

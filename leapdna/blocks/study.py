@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Sequence, Union
 from leapdna.blocks.allele import Allele
 from leapdna.blocks.base import Base
 from leapdna.blocks.observation import Observation
+from leapdna.blocks.locus import Locus
 from leapdna.errors import LeapdnaError
 
 
@@ -10,15 +11,18 @@ class Study(Base):
     block_type: str = 'study'
     observation_list: Sequence[Observation]
     observation_ids: Sequence[str]
+    loci_metadata: Dict[str, Dict]
     allele_index: Dict[Allele, Observation]
     name: Optional[str]
+    sample_size: Optional[int]
     metadata: Dict[str, Any]
 
     def __init__(self,
                  observations: Sequence[Union[Observation, str]],
                  name: Optional[str] = None,
                  id: Optional[str] = None,
-                 metadata: Optional[Dict[str, Any]] = None,
+                 sample_size: Optional[int] = None,
+                 loci_metadata: Optional[Dict[str, Dict]] = None,
                  *args,
                  **kwargs):
         super().__init__(*args, **kwargs)  # type: ignore
@@ -27,7 +31,6 @@ class Study(Base):
             self.observation_ids = \
                 [obs.id for obs in observations]  # type: ignore
             self.observation_list = observations  # type: ignore
-            # self.calculate_frequencies()
             self.rebuild_indices()
         else:
             self.observation_ids = observations  # type: ignore
@@ -35,7 +38,8 @@ class Study(Base):
 
         self.id = id or name or 'study_default_id'
         self.name = name
-        self.metadata = metadata or {}
+        self.sample_size = sample_size
+        self.loci_metadata = loci_metadata or {}
 
     def resolve_deps_from_blob(self, blob):
         def _resolve_observation(obs):
@@ -56,11 +60,11 @@ class Study(Base):
         assert all(obs.count is not None for obs in self.observation_list),\
             'All observations must have a count'
 
-        loci = set([obs.allele.locus for obs in self.observation_list])
+        _loci = set([obs.allele.locus for obs in self.observation_list])
         total_count_per_locus = {
             locus: sum(obs.count for obs in self.observation_list
                        if obs.allele.locus == locus)
-            for locus in loci
+            for locus in _loci
         }
 
         for i, obs in enumerate(self.observation_list):
@@ -104,7 +108,7 @@ class Study(Base):
         ret.update({
             'observations': self.observation_ids,
             'name': self.name,
-            'metadata': self.metadata
+            'loci_metadata': self.loci_metadata
         })
         if without_deps:
             ret['observations'] = [

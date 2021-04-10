@@ -11,13 +11,21 @@ class TestStudyBlock(TestCase):
         l2 = Locus('l2')
         a3 = Allele('a3', l2)
         a4 = Allele('a4', l2)
-
+        loci_metadata = {
+            'l1': {
+                'sample_size': 100
+            },
+            'l2': {
+                'sample_size': 100
+            }
+        }
         study = Study([
             Observation(a1, count=50),
             Observation(a2, count=50),
             Observation(a3, count=10),
             Observation(a4, count=90)
-        ])
+        ],
+                      loci_metadata=loci_metadata)
         study.calculate_frequencies()
         self.assertTrue(study is not None)
         self.assertEqual(study.get_freq(a1), 0.5)
